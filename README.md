@@ -54,5 +54,4 @@ Make sure you have **Node.js** and **npm** installed on your machine.
 
 1. **Clone the repository:**
 ```bash
-   git clone [https://github.com/your-username/nexus-ai.git](https://github.com/your-username/nexus-ai.git)
-   cd nexus-ai
+   git clone [https://github.com/mariamwael6629-cmyk/Nexus-AI-Chat]
