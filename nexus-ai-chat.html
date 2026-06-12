@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus AI — Intelligence with Memory</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-void:#08080F;
+  --bg-surface:#0E0E1A;
+  --bg-elevated:#151525;
+  --bg-glass:rgba(21,21,37,0.7);
+  --bg-card:rgba(255,255,255,0.04);
+  --border-subtle:rgba(255,255,255,0.06);
+  --border-glow:rgba(124,58,237,0.4);
+  --border-teal:rgba(0,217,192,0.3);
+  --amethyst:#7C3AED;
+  --amethyst-light:#9B6BF7;
+  --amethyst-pale:#2D1B5E;
+  --magenta:#E040FB;
+  --magenta-light:#F37BFF;
+  --teal:#00D9C0;
+  --teal-dark:#00A896;
+  --ivory:#F0EEF8;
+  --ivory-dim:#B8B4CC;
+  --ivory-muted:#6B6887;
+  --gold:#F2C94C;
+  --danger:#FF5B5B;
+  --success:#4FFFB4;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --r-sm:8px;
+  --r-md:12px;
+  --r-lg:16px;
+  --r-xl:24px;
+  --r-full:999px;
+  --shadow-glow:0 0 40px rgba(124,58,237,0.15);
+  --shadow-teal:0 0 30px rgba(0,217,192,0.1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg-void);color:var(--ivory);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;background:none;font-family:var(--font-body)}
+input,textarea{font-family:var(--font-body)}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.4);border-radius:4px}
+
+/* ─── PAGE MANAGER ─── */
+.page{display:none}
+.page.active{display:flex;flex-direction:column;min-height:100vh}
+
+/* ─── GLOBAL NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;padding:0 32px;
+  background:rgba(8,8,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-subtle)}
+.nav-logo{font-family:var(--font-display);font-size:20px;font-weight:700;
+  background:linear-gradient(135deg,var(--amethyst-light),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-logo span{font-weight:300;opacity:0.7}
+.nav-links{display:flex;gap:8px;margin-left:48px}
+.nav-link{padding:6px 14px;border-radius:var(--r-full);font-size:14px;color:var(--ivory-dim);transition:all 0.2s}
+.nav-link:hover,.nav-link.active{color:var(--ivory);background:var(--bg-card)}
+.nav-actions{margin-left:auto;display:flex;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:var(--r-full);font-size:14px;font-weight:500;transition:all 0.2s;cursor:pointer}
+.btn-ghost{background:transparent;border:1px solid var(--border-subtle);color:var(--ivory-dim)}
+.btn-ghost:hover{border-color:rgba(124,58,237,0.5);color:var(--ivory)}
+.btn-primary{background:linear-gradient(135deg,var(--amethyst),#5B21B6);border:1px solid transparent;color:white;box-shadow:0 4px 20px rgba(124,58,237,0.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(124,58,237,0.45)}
+.btn-teal{background:linear-gradient(135deg,var(--teal-dark),var(--teal));border:1px solid transparent;color:#001a18;font-weight:600}
+.btn-teal:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(0,217,192,0.3)}
+.btn-sm{padding:6px 14px;font-size:13px}
+
+/* ─── GLASS CARD ─── */
+.glass{background:var(--bg-glass);backdrop-filter:blur(20px);border:1px solid var(--border-subtle);border-radius:var(--r-lg)}
+.card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:24px}
+
+/* ─── CHIP ─── */
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:var(--r-full);font-size:12px;font-weight:500}
+.chip-purple{background:rgba(124,58,237,0.15);color:var(--amethyst-light);border:1px solid rgba(124,58,237,0.25)}
+.chip-teal{background:rgba(0,217,192,0.1);color:var(--teal);border:1px solid rgba(0,217,192,0.2)}
+.chip-magenta{background:rgba(224,64,251,0.1);color:var(--magenta-light);border:1px solid rgba(224,64,251,0.2)}
+
+/* ─── PULSE DOT ─── */
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);position:relative;display:inline-block}
+.pulse-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:rgba(0,217,192,0.3);animation:pulseAnim 2s infinite}
+@keyframes pulseAnim{0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.6);opacity:0}}
+
+/* ─── GRADIENT TEXT ─── */
+.grad-text{background:linear-gradient(135deg,var(--amethyst-light),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-text-2{background:linear-gradient(135deg,var(--magenta-light),var(--amethyst-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ═══════════════════════════════════
+   LANDING PAGE
+═══════════════════════════════════ */
+#page-landing{background:var(--bg-void)}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 40px;position:relative;overflow:hidden}
+.hero-orbs{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.3;animation:orbFloat 8s ease-in-out infinite}
+.orb-1{width:600px;height:600px;background:var(--amethyst);top:-200px;left:-100px;animation-delay:0s}
+.orb-2{width:400px;height:400px;background:var(--magenta);bottom:-100px;right:-100px;animation-delay:-3s}
+.orb-3{width:300px;height:300px;background:var(--teal);top:30%;right:10%;animation-delay:-5s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(30px,-40px)}66%{transform:translate(-20px,20px)}}
+.hero-badge{margin-bottom:24px}
+.hero h1{font-family:var(--font-display);font-size:clamp(44px,7vw,88px);font-weight:700;line-height:1.05;letter-spacing:-2px;margin-bottom:24px;max-width:900px}
+.hero-sub{font-size:18px;color:var(--ivory-dim);max-width:560px;margin-bottom:40px;line-height:1.7}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:60px}
+.hero-preview{position:relative;width:100%;max-width:900px;margin:0 auto}
+.hero-preview-frame{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--r-xl);overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,0.6),0 0 80px rgba(124,58,237,0.15)}
+.preview-bar{height:40px;background:var(--bg-elevated);display:flex;align-items:center;padding:0 16px;gap:8px;border-bottom:1px solid var(--border-subtle)}
+.preview-dot{width:10px;height:10px;border-radius:50%}
+.preview-preview{height:320px;display:flex;overflow:hidden}
+.preview-sidebar{width:200px;border-right:1px solid var(--border-subtle);padding:16px;display:flex;flex-direction:column;gap:8px}
+.preview-chat-item{padding:8px 10px;border-radius:var(--r-sm);font-size:12px;color:var(--ivory-dim);cursor:pointer}
+.preview-chat-item.sel{background:rgba(124,58,237,0.15);color:var(--ivory)}
+.preview-main{flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.preview-msg{display:flex;gap:10px;align-items:flex-start}
+.preview-msg.ai{flex-direction:row}
+.preview-msg.user{flex-direction:row-reverse}
+.preview-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.preview-avatar.ai-av{background:linear-gradient(135deg,var(--amethyst),var(--teal))}
+.preview-avatar.user-av{background:linear-gradient(135deg,var(--magenta),var(--amethyst))}
+.preview-bubble{padding:10px 14px;border-radius:var(--r-md);font-size:12px;line-height:1.5;max-width:240px}
+.preview-bubble.ai-b{background:var(--bg-elevated);color:var(--ivory-dim)}
+.preview-bubble.user-b{background:linear-gradient(135deg,var(--amethyst),#5B21B6);color:white}
+.preview-input-row{margin-top:auto;background:var(--bg-elevated);border-radius:var(--r-md);padding:10px 14px;display:flex;align-items:center;gap:8px}
+.preview-input-placeholder{flex:1;font-size:12px;color:var(--ivory-muted)}
+
+/* Features */
+.section{padding:100px 24px;max-width:1200px;margin:0 auto}
+.section-eyebrow{font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--amethyst-light);margin-bottom:16px}
+.section-title{font-family:var(--font-display);font-size:clamp(32px,4vw,52px);font-weight:700;line-height:1.15;letter-spacing:-1px;margin-bottom:20px}
+.section-sub{font-size:17px;color:var(--ivory-dim);max-width:560px;line-height:1.7}
+
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:60px}
+.feature-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-xl);padding:32px;position:relative;overflow:hidden;transition:all 0.3s}
+.feature-card::before{content:'';position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity 0.3s;
+  background:linear-gradient(135deg,rgba(124,58,237,0.05),transparent)}
+.feature-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-4px);box-shadow:var(--shadow-glow)}
+.feature-card:hover::before{opacity:1}
+.feature-icon{width:48px;height:48px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:20px}
+.fi-purple{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25)}
+.fi-teal{background:rgba(0,217,192,0.1);border:1px solid rgba(0,217,192,0.2)}
+.fi-magenta{background:rgba(224,64,251,0.1);border:1px solid rgba(224,64,251,0.2)}
+.feature-card h3{font-family:var(--font-display);font-size:18px;font-weight:600;margin-bottom:10px}
+.feature-card p{font-size:14px;color:var(--ivory-dim);line-height:1.7}
+
+/* Memory highlight */
+.memory-showcase{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-top:60px}
+.memory-visual{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--r-xl);padding:24px;position:relative;overflow:hidden}
+.memory-visual-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.memory-visual-title{font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--ivory-dim)}
+.memory-items{display:flex;flex-direction:column;gap:10px}
+.memory-item-card{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-md);padding:12px 16px;display:flex;align-items:center;gap:12px;transition:all 0.2s}
+.memory-item-card:hover{border-color:var(--border-teal)}
+.mi-icon{font-size:16px;opacity:0.8}
+.mi-content{flex:1}
+.mi-label{font-size:12px;color:var(--ivory-muted);margin-bottom:2px}
+.mi-value{font-size:13px;color:var(--ivory)}
+.mi-tag{font-size:11px;padding:2px 8px;border-radius:var(--r-full);background:rgba(0,217,192,0.1);color:var(--teal)}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:60px 0}
+.stat-card{text-align:center}
+.stat-num{font-family:var(--font-display);font-size:40px;font-weight:700;margin-bottom:4px}
+.stat-label{font-size:13px;color:var(--ivory-muted)}
+
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:60px}
+.pricing-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-xl);padding:32px;position:relative;transition:all 0.3s}
+.pricing-card.featured{background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(0,217,192,0.06));border-color:rgba(124,58,237,0.4);box-shadow:var(--shadow-glow)}
+.pricing-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--amethyst),var(--teal-dark));color:white;padding:4px 16px;border-radius:var(--r-full);font-size:12px;font-weight:600}
+.pricing-plan{font-size:13px;color:var(--ivory-muted);margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:1px}
+.pricing-price{font-family:var(--font-display);font-size:48px;font-weight:700;margin-bottom:4px}
+.pricing-price sup{font-size:24px;vertical-align:super}
+.pricing-price sub{font-size:16px;color:var(--ivory-muted)}
+.pricing-desc{font-size:13px;color:var(--ivory-dim);margin-bottom:24px}
+.pricing-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.pricing-features li{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ivory-dim)}
+.pricing-features li::before{content:'✓';color:var(--teal);font-weight:700;flex-shrink:0}
+
+/* Testimonials */
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:60px}
+.testimonial-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-xl);padding:28px}
+.test-quote{font-size:15px;color:var(--ivory-dim);line-height:1.7;margin-bottom:20px;font-style:italic}
+.test-author{display:flex;align-items:center;gap:12px}
+.test-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--amethyst),var(--teal))}
+.test-name{font-size:14px;font-weight:600}
+.test-role{font-size:12px;color:var(--ivory-muted)}
+.test-stars{color:var(--gold);font-size:12px;margin-bottom:12px}
+
+/* Footer */
+.footer{border-top:1px solid var(--border-subtle);padding:40px 24px;text-align:center;color:var(--ivory-muted);font-size:13px}
+
+/* ═══════════════════════════════════
+   CHAT WORKSPACE
+═══════════════════════════════════ */
+#page-chat{flex-direction:row;height:100vh;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:280px;flex-shrink:0;background:var(--bg-surface);border-right:1px solid var(--border-subtle);display:flex;flex-direction:column;height:100vh}
+.sidebar-top{padding:16px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:space-between}
+.sidebar-logo{font-family:var(--font-display);font-size:16px;font-weight:700}
+.sidebar-logo span{font-size:10px;background:rgba(124,58,237,0.2);color:var(--amethyst-light);padding:2px 6px;border-radius:4px;margin-left:6px;font-family:var(--font-body)}
+.sidebar-nav{padding:12px 8px;border-bottom:1px solid var(--border-subtle);display:flex;flex-direction:column;gap:2px}
+.sidebar-nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r-sm);font-size:13px;color:var(--ivory-dim);cursor:pointer;transition:all 0.15s;position:relative}
+.sidebar-nav-item:hover{background:var(--bg-card);color:var(--ivory)}
+.sidebar-nav-item.active{background:rgba(124,58,237,0.12);color:var(--amethyst-light)}
+.sidebar-nav-item .icon{font-size:16px;width:18px;text-align:center}
+.sidebar-search{padding:10px;border-bottom:1px solid var(--border-subtle)}
+.search-input{width:100%;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);padding:8px 12px;font-size:13px;color:var(--ivory);outline:none;transition:border-color 0.2s}
+.search-input::placeholder{color:var(--ivory-muted)}
+.search-input:focus{border-color:rgba(124,58,237,0.4)}
+.sidebar-chats{flex:1;overflow-y:auto;padding:8px}
+.chat-section-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ivory-muted);padding:6px 8px}
+.chat-item{padding:10px 12px;border-radius:var(--r-sm);cursor:pointer;transition:all 0.15s;position:relative}
+.chat-item:hover{background:var(--bg-card)}
+.chat-item.active{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2)}
+.chat-item-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.chat-item-preview{font-size:12px;color:var(--ivory-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-item-meta{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.chat-item-time{font-size:11px;color:var(--ivory-muted)}
+.chat-item-actions{display:none;gap:4px}
+.chat-item:hover .chat-item-actions{display:flex}
+.icon-btn{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;background:transparent;color:var(--ivory-muted);transition:all 0.15s}
+.icon-btn:hover{background:var(--bg-elevated);color:var(--ivory)}
+.sidebar-bottom{padding:12px;border-top:1px solid var(--border-subtle)}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:var(--r-sm);cursor:pointer;transition:all 0.15s}
+.user-row:hover{background:var(--bg-card)}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--magenta),var(--amethyst));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.user-name{font-size:13px;font-weight:500}
+.user-plan{font-size:11px;color:var(--amethyst-light)}
+
+/* Chat main */
+.chat-main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.chat-header{height:60px;flex-shrink:0;display:flex;align-items:center;padding:0 24px;border-bottom:1px solid var(--border-subtle);gap:16px}
+.chat-title-edit{background:transparent;border:none;color:var(--ivory);font-family:var(--font-display);font-size:15px;font-weight:600;outline:none;cursor:text;min-width:100px}
+.chat-header-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.hdr-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--r-full);font-size:12px;background:var(--bg-card);border:1px solid var(--border-subtle);color:var(--ivory-dim);transition:all 0.2s}
+.hdr-btn:hover{border-color:rgba(124,58,237,0.4);color:var(--ivory)}
+.memory-badge{background:rgba(0,217,192,0.1);border-color:rgba(0,217,192,0.25);color:var(--teal)}
+
+/* Messages */
+.messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px}
+.msg-group{display:flex;flex-direction:column;gap:4px}
+.msg-row{display:flex;gap:14px;align-items:flex-start}
+.msg-row.user-msg{flex-direction:row-reverse}
+.msg-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;margin-top:2px}
+.ai-avatar{background:linear-gradient(135deg,var(--amethyst),var(--teal-dark))}
+.user-avatar-msg{background:linear-gradient(135deg,var(--magenta),var(--amethyst))}
+.msg-content{max-width:70%}
+.msg-sender{font-size:12px;font-weight:600;color:var(--ivory-muted);margin-bottom:5px}
+.msg-row.user-msg .msg-sender{text-align:right}
+.msg-bubble{padding:13px 17px;border-radius:var(--r-lg);font-size:14px;line-height:1.7;position:relative}
+.ai-bubble{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-top-left-radius:4px;color:var(--ivory-dim)}
+.user-bubble{background:linear-gradient(135deg,var(--amethyst),#5B21B6);color:white;border-top-right-radius:4px}
+.msg-bubble strong{color:var(--ivory);font-weight:600}
+.msg-meta{display:flex;align-items:center;gap:10px;margin-top:5px;font-size:11px;color:var(--ivory-muted)}
+.msg-row.user-msg .msg-meta{justify-content:flex-end}
+.msg-actions{display:none;gap:4px;align-items:center}
+.msg-content:hover .msg-actions{display:flex}
+.memory-tag{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:3px 8px;border-radius:var(--r-full);font-size:11px;background:rgba(0,217,192,0.08);color:var(--teal);border:1px solid rgba(0,217,192,0.15)}
+
+/* Typing indicator */
+.typing-indicator{display:flex;align-items:center;gap:14px;padding:0 24px}
+.typing-dots{display:flex;gap:5px;align-items:center;padding:12px 16px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-lg);border-top-left-radius:4px}
+.typing-dot{width:7px;height:7px;border-radius:50%;background:var(--amethyst-light);animation:typingDot 1.4s ease-in-out infinite}
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+@keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-6px);opacity:1}}
+
+/* File upload preview */
+.file-preview-area{padding:12px 24px;border-top:1px solid var(--border-subtle);display:flex;gap:10px;flex-wrap:wrap}
+.file-chip{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:12px}
+.file-chip .fc-remove{width:16px;height:16px;border-radius:50%;background:var(--bg-card);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;color:var(--ivory-muted)}
+.file-chip .fc-remove:hover{background:rgba(255,91,91,0.2);color:var(--danger)}
+
+/* Input area */
+.input-area{padding:16px 24px;border-top:1px solid var(--border-subtle)}
+.input-tools{display:flex;gap:8px;margin-bottom:10px}
+.tool-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--r-full);font-size:12px;background:var(--bg-card);border:1px solid var(--border-subtle);color:var(--ivory-dim);transition:all 0.2s}
+.tool-btn:hover{border-color:rgba(124,58,237,0.4);color:var(--ivory)}
+.input-box{display:flex;align-items:flex-end;gap:12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-xl);padding:12px 12px 12px 18px;transition:border-color 0.2s}
+.input-box:focus-within{border-color:rgba(124,58,237,0.5);box-shadow:0 0 20px rgba(124,58,237,0.08)}
+#chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--ivory);font-size:14px;resize:none;max-height:120px;line-height:1.6}
+#chat-input::placeholder{color:var(--ivory-muted)}
+.send-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--amethyst),#5B21B6);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:all 0.2s;color:white}
+.send-btn:hover{transform:scale(1.05);box-shadow:0 4px 15px rgba(124,58,237,0.4)}
+.send-btn:disabled{opacity:0.4;transform:none}
+.input-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--ivory-muted)}
+
+/* ─── RIGHT PANEL ─── */
+.right-panel{width:300px;flex-shrink:0;background:var(--bg-surface);border-left:1px solid var(--border-subtle);display:flex;flex-direction:column;height:100vh;overflow-y:auto}
+.panel-header{padding:16px;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-size:13px;font-weight:600;color:var(--ivory-dim);text-transform:uppercase;letter-spacing:1px}
+.panel-section{padding:16px;border-bottom:1px solid var(--border-subtle)}
+.panel-section-title{font-size:12px;font-weight:600;color:var(--ivory-muted);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.active-memories{display:flex;flex-direction:column;gap:8px}
+.mem-pill{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(0,217,192,0.06);border:1px solid rgba(0,217,192,0.12);border-radius:var(--r-sm);font-size:12px;color:var(--teal)}
+.mem-pill .mp-del{margin-left:auto;opacity:0.5;font-size:14px;cursor:pointer;transition:opacity 0.2s}
+.mem-pill .mp-del:hover{opacity:1}
+.ai-tools-list{display:flex;flex-direction:column;gap:6px}
+.ai-tool{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-sm);font-size:13px;cursor:pointer;transition:all 0.2s}
+.ai-tool:hover{border-color:rgba(124,58,237,0.35);background:rgba(124,58,237,0.05)}
+.ai-tool-icon{font-size:16px}
+.ai-tool-name{font-size:13px;font-weight:500}
+.ai-tool-desc{font-size:11px;color:var(--ivory-muted);margin-left:auto}
+
+/* ═══════════════════════════════════
+   MEMORY PAGE
+═══════════════════════════════════ */
+#page-memory{flex-direction:row;height:100vh;overflow:hidden}
+.memory-page-sidebar{width:240px;flex-shrink:0;background:var(--bg-surface);border-right:1px solid var(--border-subtle);padding:80px 16px 16px;display:flex;flex-direction:column;gap:4px}
+.mem-cat{padding:9px 12px;border-radius:var(--r-sm);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--ivory-dim);transition:all 0.15s}
+.mem-cat:hover{background:var(--bg-card);color:var(--ivory)}
+.mem-cat.active{background:rgba(124,58,237,0.1);color:var(--amethyst-light)}
+.mem-cat .mc-count{margin-left:auto;font-size:11px;background:var(--bg-elevated);padding:2px 7px;border-radius:var(--r-full)}
+.memory-content{flex:1;overflow-y:auto;padding:80px 32px 32px}
+.memory-header{margin-bottom:32px}
+.memory-header h1{font-family:var(--font-display);font-size:28px;font-weight:700;margin-bottom:8px}
+.memory-header p{font-size:14px;color:var(--ivory-dim)}
+.memory-toolbar{display:flex;gap:12px;margin-bottom:24px;align-items:center;flex-wrap:wrap}
+.mem-search{flex:1;min-width:200px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-full);padding:9px 16px;font-size:13px;color:var(--ivory);outline:none}
+.mem-search::placeholder{color:var(--ivory-muted)}
+.mem-search:focus{border-color:rgba(124,58,237,0.4)}
+.memory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.memory-card-item{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;transition:all 0.2s;cursor:pointer}
+.memory-card-item:hover{border-color:rgba(0,217,192,0.25);transform:translateY(-2px);box-shadow:var(--shadow-teal)}
+.mci-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.mci-category{font-size:11px;padding:3px 8px;border-radius:var(--r-full)}
+.mci-actions{display:flex;gap:4px;opacity:0}
+.memory-card-item:hover .mci-actions{opacity:1}
+.mci-title{font-size:14px;font-weight:600;margin-bottom:6px}
+.mci-value{font-size:13px;color:var(--ivory-dim);line-height:1.5}
+.mci-footer{margin-top:12px;display:flex;align-items:center;justify-content:space-between}
+.mci-date{font-size:11px;color:var(--ivory-muted)}
+.mci-source{font-size:11px;color:var(--amethyst-light)}
+.mci-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.mci-tag{font-size:11px;padding:2px 7px;border-radius:var(--r-full);background:var(--bg-elevated);color:var(--ivory-muted)}
+
+/* ═══════════════════════════════════
+   SETTINGS PAGE
+═══════════════════════════════════ */
+#page-settings{flex-direction:row;height:100vh;overflow:hidden}
+.settings-sidebar{width:220px;flex-shrink:0;background:var(--bg-surface);border-right:1px solid var(--border-subtle);padding:80px 12px 16px}
+.settings-nav-item{padding:9px 12px;border-radius:var(--r-sm);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--ivory-dim);transition:all 0.15s;margin-bottom:2px}
+.settings-nav-item:hover{background:var(--bg-card);color:var(--ivory)}
+.settings-nav-item.active{background:rgba(124,58,237,0.1);color:var(--amethyst-light)}
+.settings-content{flex:1;overflow-y:auto;padding:80px 40px 40px;max-width:720px}
+.settings-section{margin-bottom:40px}
+.settings-section-title{font-family:var(--font-display);font-size:18px;font-weight:600;margin-bottom:6px}
+.settings-section-desc{font-size:13px;color:var(--ivory-dim);margin-bottom:24px}
+.settings-divider{height:1px;background:var(--border-subtle);margin:32px 0}
+.form-field{margin-bottom:20px}
+.form-label{font-size:13px;font-weight:500;margin-bottom:6px;display:block;color:var(--ivory-dim)}
+.form-input{width:100%;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);padding:10px 14px;font-size:14px;color:var(--ivory);outline:none;transition:border-color 0.2s}
+.form-input::placeholder{color:var(--ivory-muted)}
+.form-input:focus{border-color:rgba(124,58,237,0.4)}
+.form-select{width:100%;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);padding:10px 14px;font-size:14px;color:var(--ivory);outline:none;appearance:none;cursor:pointer}
+.form-select:focus{border-color:rgba(124,58,237,0.4)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border-subtle)}
+.toggle-name{font-size:14px;font-weight:500}
+.toggle-desc{font-size:12px;color:var(--ivory-muted);margin-top:2px}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-full);transition:all 0.3s;cursor:pointer}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:var(--ivory-muted);border-radius:50%;transition:all 0.3s}
+.toggle input:checked+.toggle-slider{background:rgba(124,58,237,0.3);border-color:var(--amethyst)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px);background:var(--amethyst-light)}
+.personality-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.personality-opt{padding:16px;border:1px solid var(--border-subtle);border-radius:var(--r-lg);cursor:pointer;text-align:center;transition:all 0.2s}
+.personality-opt:hover{border-color:rgba(124,58,237,0.3)}
+.personality-opt.selected{border-color:var(--amethyst);background:rgba(124,58,237,0.08)}
+.personality-opt .po-icon{font-size:24px;margin-bottom:8px}
+.personality-opt .po-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.personality-opt .po-desc{font-size:11px;color:var(--ivory-muted)}
+.profile-avatar-row{display:flex;align-items:center;gap:20px;margin-bottom:24px}
+.profile-avatar-large{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--magenta),var(--amethyst));display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;flex-shrink:0}
+
+/* ═══════════════════════════════════
+   DASHBOARD PAGE
+═══════════════════════════════════ */
+#page-dashboard{flex-direction:row;height:100vh;overflow:hidden}
+.dash-main{flex:1;overflow-y:auto;padding:80px 32px 32px}
+.dash-welcome{margin-bottom:32px}
+.dash-welcome h1{font-family:var(--font-display);font-size:26px;font-weight:700;margin-bottom:4px}
+.dash-welcome p{font-size:14px;color:var(--ivory-dim)}
+.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.dash-stat-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px;transition:all 0.2s}
+.dash-stat-card:hover{border-color:rgba(124,58,237,0.25);transform:translateY(-2px)}
+.dsc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.dsc-label{font-size:12px;color:var(--ivory-muted);font-weight:500}
+.dsc-icon{width:32px;height:32px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:16px}
+.dsc-num{font-family:var(--font-display);font-size:28px;font-weight:700;margin-bottom:4px}
+.dsc-change{font-size:12px}
+.dsc-change.up{color:var(--success)}
+.dsc-change.down{color:var(--danger)}
+.dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:24px}
+.dash-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:20px}
+.dash-card-title{font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.activity-list{display:flex;flex-direction:column;gap:2px}
+.activity-item{display:flex;align-items:center;gap:12px;padding:10px;border-radius:var(--r-sm);transition:background 0.15s;cursor:pointer}
+.activity-item:hover{background:var(--bg-elevated)}
+.ai-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.activity-text{flex:1;font-size:13px;color:var(--ivory-dim)}
+.activity-text strong{color:var(--ivory)}
+.activity-time{font-size:11px;color:var(--ivory-muted)}
+.chart-area{height:160px;position:relative;display:flex;align-items:flex-end;gap:8px;padding:0 4px}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.chart-bar{border-radius:4px 4px 0 0;width:100%;transition:height 0.5s cubic-bezier(0.4,0,0.2,1);background:linear-gradient(to top,var(--amethyst),var(--amethyst-light));opacity:0.8;cursor:pointer}
+.chart-bar:hover{opacity:1}
+.chart-label{font-size:10px;color:var(--ivory-muted);white-space:nowrap}
+.model-usage{display:flex;flex-direction:column;gap:10px}
+.usage-row{display:flex;flex-direction:column;gap:5px}
+.usage-info{display:flex;justify-content:space-between;font-size:12px}
+.usage-name{color:var(--ivory-dim)}
+.usage-pct{color:var(--ivory);font-weight:500}
+.usage-bar{height:6px;background:var(--bg-elevated);border-radius:var(--r-full);overflow:hidden}
+.usage-fill{height:100%;border-radius:var(--r-full);transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+
+/* ═══════════════════════════════════
+   NOTIFICATIONS / TOAST
+═══════════════════════════════════ */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:1000;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 18px;border-radius:var(--r-md);font-size:13px;display:flex;align-items:center;gap:10px;animation:toastIn 0.3s ease;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
+.toast-success{background:rgba(79,255,180,0.12);border:1px solid rgba(79,255,180,0.25);color:var(--success)}
+.toast-info{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:var(--amethyst-light)}
+@keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Responsive */
+@media(max-width:1100px){
+  .right-panel{display:none}
+  .dash-stats{grid-template-columns:repeat(2,1fr)}
+  .dash-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .sidebar{width:240px;position:fixed;left:-240px;top:0;z-index:200;transition:left 0.3s}
+  .sidebar.open{left:0}
+  .memory-page-sidebar,.settings-sidebar{display:none}
+  .memory-showcase{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .dash-stats{grid-template-columns:1fr 1fr}
+  .hero h1{font-size:36px;letter-spacing:-1px}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     LANDING PAGE
+════════════════════════════════ -->
+<div id="page-landing" class="page active">
+  <!-- Nav -->
+  <nav class="nav">
+    <span class="nav-logo">Nexus<span>AI</span></span>
+    <div class="nav-links">
+      <a class="nav-link" onclick="showPage('landing')">Home</a>
+      <a class="nav-link" href="#features">Features</a>
+      <a class="nav-link" href="#pricing">Pricing</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-sm" onclick="showPage('dashboard')">Sign in</button>
+      <button class="btn btn-primary btn-sm" onclick="showPage('chat')">Launch App ↗</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center">
+      <div class="hero-badge"><span class="chip chip-teal">✦ Now with Persistent Memory</span></div>
+      <h1>The AI that <span class="grad-text">remembers</span><br>everything about you</h1>
+      <p class="hero-sub">Nexus AI learns your preferences, recalls your history, and delivers deeply personalized intelligence — across every conversation, forever.</p>
+      <div class="hero-cta">
+        <button class="btn btn-teal" onclick="showPage('chat')">Start for free →</button>
+        <button class="btn btn-ghost" onclick="showPage('dashboard')">View Dashboard</button>
+      </div>
+      <div class="hero-preview">
+        <div class="hero-preview-frame">
+          <div class="preview-bar">
+            <div class="preview-dot" style="background:#FF5B5B"></div>
+            <div class="preview-dot" style="background:#F2C94C"></div>
+            <div class="preview-dot" style="background:#4FFFB4"></div>
+            <span style="margin-left:12px;font-size:12px;color:var(--ivory-muted)">Nexus AI — Chat Workspace</span>
+            <span style="margin-left:auto" class="chip chip-teal" style="font-size:11px">● 7 memories active</span>
+          </div>
+          <div class="preview-preview">
+            <div class="preview-sidebar">
+              <div style="font-size:11px;color:var(--ivory-muted);padding:4px 8px;margin-bottom:4px">RECENT CHATS</div>
+              <div class="preview-chat-item sel">🔬 Research on LLMs</div>
+              <div class="preview-chat-item">📊 Q3 Report Analysis</div>
+              <div class="preview-chat-item">🎨 Brand Identity</div>
+              <div class="preview-chat-item">💡 Startup Ideas</div>
+              <div class="preview-chat-item">📝 Blog Post Draft</div>
+            </div>
+            <div class="preview-main">
+              <div class="preview-msg ai">
+                <div class="preview-avatar ai-av">N</div>
+                <div class="preview-bubble ai-b">Based on your previous research into transformer architectures, you'll find this new paper particularly relevant. I remember you prefer technical depth over high-level summaries.</div>
+              </div>
+              <div class="preview-msg user">
+                <div class="preview-avatar user-av">A</div>
+                <div class="preview-bubble user-b">Can you compare this to the attention mechanism paper we discussed last week?</div>
+              </div>
+              <div class="preview-msg ai">
+                <div class="preview-avatar ai-av">N</div>
+                <div class="preview-bubble ai-b">Certainly! Pulling from our conversation on the 3rd...</div>
+              </div>
+              <div class="preview-input-row" style="margin-top:auto">
+                <span class="preview-input-placeholder">Ask Nexus anything...</span>
+                <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#00D9C0);display:flex;align-items:center;justify-content:center;font-size:12px;color:white">→</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats bar -->
+  <div style="border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);background:rgba(21,21,37,0.5)">
+    <div class="stats-row" style="max-width:900px;margin:0 auto;padding:40px 24px">
+      <div class="stat-card">
+        <div class="stat-num grad-text">2.4M</div>
+        <div class="stat-label">Active users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num grad-text-2">98M</div>
+        <div class="stat-label">Conversations</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="background:linear-gradient(135deg,var(--teal),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">142M</div>
+        <div class="stat-label">Saved memories</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="background:linear-gradient(135deg,var(--gold),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">99.9%</div>
+        <div class="stat-label">Uptime SLA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section id="features" class="section">
+    <div class="section-eyebrow">Core capabilities</div>
+    <h2 class="section-title">Intelligence that <span class="grad-text">evolves with you</span></h2>
+    <p class="section-sub">Every conversation teaches Nexus more about you. The longer you use it, the smarter and more personalized it becomes.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon fi-teal">🧠</div>
+        <h3>Persistent Memory Engine</h3>
+        <p>Nexus retains facts, preferences, and context from every conversation. Reference something you said three months ago — Nexus already knows.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-purple">💬</div>
+        <h3>Contextual Conversations</h3>
+        <p>Every response takes into account your full history, not just the current thread. It's the difference between a chatbot and an intelligent colleague.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-magenta">🎛</div>
+        <h3>Tunable AI Personality</h3>
+        <p>Choose how Nexus communicates — from concise and technical to warm and exploratory. Your AI, your style.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-teal">📁</div>
+        <h3>Document Intelligence</h3>
+        <p>Upload PDFs, spreadsheets, and images. Nexus reads, summarizes, and cross-references files across all your conversations.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-purple">🔒</div>
+        <h3>Private Memory Vault</h3>
+        <p>You own your memories. View, edit, categorize, or delete everything Nexus has stored. Full transparency, full control.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-magenta">⚡</div>
+        <h3>Real-time Streaming</h3>
+        <p>Watch Nexus think in real time. Streaming responses, smart suggestions, and instant context recall — zero waiting.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Memory showcase -->
+  <div style="background:var(--bg-surface);border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle)">
+    <div class="section">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+        <div>
+          <div class="section-eyebrow">Memory Center</div>
+          <h2 class="section-title" style="font-size:clamp(26px,3.5vw,44px)">Your AI's <span class="grad-text">living memory</span></h2>
+          <p class="section-sub" style="margin-bottom:24px">Browse, search, and manage every fact Nexus has learned about you. Organized by category, tagged for context, always under your control.</p>
+          <button class="btn btn-primary" onclick="showPage('memory')">Explore Memory Center →</button>
+        </div>
+        <div class="memory-visual">
+          <div class="memory-visual-header">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="pulse-dot"></div>
+              <span class="memory-visual-title">Active Memories</span>
+            </div>
+            <span class="chip chip-teal">24 stored</span>
+          </div>
+          <div class="memory-items">
+            <div class="memory-item-card">
+              <div class="mi-icon">👤</div>
+              <div class="mi-content">
+                <div class="mi-label">Preference</div>
+                <div class="mi-value">Prefers technical depth in explanations</div>
+              </div>
+              <span class="mi-tag">personality</span>
+            </div>
+            <div class="memory-item-card">
+              <div class="mi-icon">🛠</div>
+              <div class="mi-content">
+                <div class="mi-label">Tech Stack</div>
+                <div class="mi-value">Uses TypeScript, React, and Supabase</div>
+              </div>
+              <span class="mi-tag">work</span>
+            </div>
+            <div class="memory-item-card">
+              <div class="mi-icon">🎯</div>
+              <div class="mi-content">
+                <div class="mi-label">Goal</div>
+                <div class="mi-value">Building a SaaS product by Q4 2026</div>
+              </div>
+              <span class="mi-tag">project</span>
+            </div>
+            <div class="memory-item-card">
+              <div class="mi-icon">📅</div>
+              <div class="mi-content">
+                <div class="mi-label">Context</div>
+                <div class="mi-value">Based in London, works in fintech</div>
+              </div>
+              <span class="mi-tag">profile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <section id="pricing" class="section" style="max-width:1100px">
+    <div style="text-align:center;margin-bottom:60px">
+      <div class="section-eyebrow">Pricing</div>
+      <h2 class="section-title">Simple, transparent pricing</h2>
+      <p class="section-sub" style="margin:0 auto">Start free. Scale as your memory grows.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-plan">Free</div>
+        <div class="pricing-price"><sup>$</sup>0<sub>/mo</sub></div>
+        <p class="pricing-desc">Perfect for exploring what memory-first AI can do.</p>
+        <ul class="pricing-features">
+          <li>50 messages/day</li>
+          <li>25 stored memories</li>
+          <li>5 conversation history</li>
+          <li>Basic AI personality</li>
+        </ul>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="showPage('chat')">Get started free</button>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most popular</div>
+        <div class="pricing-plan">Pro</div>
+        <div class="pricing-price"><sup>$</sup>18<sub>/mo</sub></div>
+        <p class="pricing-desc">For power users who want deep personalization.</p>
+        <ul class="pricing-features">
+          <li>Unlimited messages</li>
+          <li>Unlimited memories</li>
+          <li>Full conversation history</li>
+          <li>Custom AI personalities</li>
+          <li>File & document analysis</li>
+          <li>Priority response speed</li>
+        </ul>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="showPage('chat')">Start Pro trial →</button>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-plan">Enterprise</div>
+        <div class="pricing-price" style="font-size:36px">Custom</div>
+        <p class="pricing-desc">For teams that need custom memory models and compliance.</p>
+        <ul class="pricing-features">
+          <li>Team shared memories</li>
+          <li>SSO + SAML</li>
+          <li>SOC 2 compliance</li>
+          <li>Custom LLM models</li>
+          <li>Dedicated support</li>
+          <li>Custom data retention</li>
+        </ul>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center">Contact sales</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <div style="background:var(--bg-surface);border-top:1px solid var(--border-subtle)">
+    <section class="section" style="max-width:1100px">
+      <div style="text-align:center;margin-bottom:60px">
+        <div class="section-eyebrow">Testimonials</div>
+        <h2 class="section-title">Loved by knowledge workers</h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-quote">"Nexus is the first AI that actually feels like it knows me. It remembers the frameworks I use, my writing style, even my time zone. It's uncanny and incredibly useful."</p>
+          <div class="test-author">
+            <div class="test-avatar">SR</div>
+            <div>
+              <div class="test-name">Sarah R.</div>
+              <div class="test-role">Senior Product Designer</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-quote">"I used to re-explain my entire codebase context every session. Nexus just knows. I've saved hours every week, and the answers are 10x more relevant."</p>
+          <div class="test-author">
+            <div class="test-avatar" style="background:linear-gradient(135deg,var(--teal-dark),var(--amethyst))">MK</div>
+            <div>
+              <div class="test-name">Marcus K.</div>
+              <div class="test-role">Full-Stack Engineer</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="test-stars">★★★★★</div>
+          <p class="test-quote">"The Memory Center is a game changer. I can audit exactly what the AI knows about me and remove anything I want. Finally, AI with real transparency."</p>
+          <div class="test-author">
+            <div class="test-avatar" style="background:linear-gradient(135deg,var(--magenta),#5B21B6)">JP</div>
+            <div>
+              <div class="test-name">Julia P.</div>
+              <div class="test-role">Founder & CEO</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:gap">
+      <span class="nav-logo">Nexus<span>AI</span></span>
+      <span>© 2026 Nexus AI Inc. — Intelligence with Memory</span>
+      <div style="display:flex;gap:16px">
+        <a href="#" style="color:var(--ivory-muted);font-size:13px">Privacy</a>
+        <a href="#" style="color:var(--ivory-muted);font-size:13px">Terms</a>
+        <a href="#" style="color:var(--ivory-muted);font-size:13px">Status</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════
+     CHAT WORKSPACE
+════════════════════════════════ -->
+<div id="page-chat" class="page">
+  <!-- Sidebar -->
+  <div class="sidebar" id="chat-sidebar">
+    <div class="sidebar-top">
+      <span class="nav-logo" style="font-size:16px">Nexus<span style="font-size:10px">AI</span></span>
+      <button class="btn btn-primary btn-sm" onclick="newChat()" title="New chat">+</button>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-nav-item active" onclick="showPage('chat')">
+        <span class="icon">💬</span> Chat
+      </div>
+      <div class="sidebar-nav-item" onclick="showPage('memory')">
+        <span class="icon">🧠</span> Memory Center
+      </div>
+      <div class="sidebar-nav-item" onclick="showPage('dashboard')">
+        <span class="icon">📊</span> Dashboard
+      </div>
+      <div class="sidebar-nav-item" onclick="showPage('settings')">
+        <span class="icon">⚙️</span> Settings
+      </div>
+    </div>
+    <div class="sidebar-search">
+      <input class="search-input" type="text" placeholder="🔍  Search chats..." oninput="filterChats(this.value)">
+    </div>
+    <div class="sidebar-chats" id="chat-list">
+      <div class="chat-section-label">Pinned</div>
+      <div class="chat-item active" onclick="loadChat(0)">
+        <div class="chat-item-name">📌 Research on LLMs</div>
+        <div class="chat-item-preview">How does attention work in...</div>
+        <div class="chat-item-meta">
+          <span class="chat-item-time">Just now</span>
+          <div class="chat-item-actions">
+            <button class="icon-btn" title="Rename" onclick="event.stopPropagation();renameChat(0)">✏️</button>
+            <button class="icon-btn" title="Delete" onclick="event.stopPropagation();deleteChat(0)">🗑</button>
+          </div>
+        </div>
+      </div>
+      <div class="chat-section-label" style="margin-top:8px">Today</div>
+      <div class="chat-item" onclick="loadChat(1)">
+        <div class="chat-item-name">Q3 Report Analysis</div>
+        <div class="chat-item-preview">Summarize the key findings...</div>
+        <div class="chat-item-meta">
+          <span class="chat-item-time">2h ago</span>
+          <div class="chat-item-actions">
+            <button class="icon-btn" title="Pin" onclick="event.stopPropagation()">📌</button>
+            <button class="icon-btn" title="Delete" onclick="event.stopPropagation();deleteChat(1)">🗑</button>
+          </div>
+        </div>
+      </div>
+      <div class="chat-item" onclick="loadChat(2)">
+        <div class="chat-item-name">Brand Identity Ideas</div>
+        <div class="chat-item-preview">Color palette suggestions for...</div>
+        <div class="chat-item-meta">
+          <span class="chat-item-time">5h ago</span>
+          <div class="chat-item-actions">
+            <button class="icon-btn" title="Archive" onclick="event.stopPropagation()">📦</button>
+            <button class="icon-btn" title="Delete" onclick="event.stopPropagation();deleteChat(2)">🗑</button>
+          </div>
+        </div>
+      </div>
+      <div class="chat-section-label" style="margin-top:8px">Yesterday</div>
+      <div class="chat-item" onclick="loadChat(3)">
+        <div class="chat-item-name">SaaS Pricing Strategy</div>
+        <div class="chat-item-preview">What's the best model for...</div>
+        <div class="chat-item-meta">
+          <span class="chat-item-time">Yesterday</span>
+          <div class="chat-item-actions">
+            <button class="icon-btn" onclick="event.stopPropagation()">📌</button>
+            <button class="icon-btn" onclick="event.stopPropagation();deleteChat(3)">🗑</button>
+          </div>
+        </div>
+      </div>
+      <div class="chat-item" onclick="loadChat(4)">
+        <div class="chat-item-name">TypeScript Generics Deep Dive</div>
+        <div class="chat-item-preview">Can you explain conditional types...</div>
+        <div class="chat-item-meta">
+          <span class="chat-item-time">Yesterday</span>
+          <div class="chat-item-actions">
+            <button class="icon-btn" onclick="event.stopPropagation()">📌</button>
+            <button class="icon-btn" onclick="event.stopPropagation();deleteChat(4)">🗑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="user-row" onclick="showPage('settings')">
+        <div class="user-avatar">AK</div>
+        <div>
+          <div class="user-name">Alex Kim</div>
+          <div class="user-plan">✦ Pro Plan</div>
+        </div>
+        <span style="margin-left:auto;font-size:16px;color:var(--ivory-muted)">⚙</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main chat area -->
+  <div class="chat-main">
+    <div class="chat-header">
+      <button onclick="showPage('landing')" style="color:var(--ivory-muted);font-size:18px;padding:4px 8px;border-radius:4px;background:var(--bg-card)">←</button>
+      <input class="chat-title-edit" id="chat-title" value="Research on LLMs" onchange="updateTitle(this.value)">
+      <span class="chip chip-teal" style="font-size:11px">📌 Pinned</span>
+      <div class="chat-header-actions">
+        <button class="hdr-btn memory-badge" onclick="showPage('memory')">🧠 7 memories active</button>
+        <button class="hdr-btn" onclick="summarizeChat()">⚡ Summarize</button>
+        <button class="hdr-btn">⋯ More</button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages" id="messages-container">
+      <!-- System memory notice -->
+      <div style="text-align:center;padding:8px 0">
+        <span style="font-size:12px;color:var(--ivory-muted);background:var(--bg-elevated);padding:6px 14px;border-radius:var(--r-full);border:1px solid var(--border-subtle)">
+          🧠 Nexus is using 7 memories from previous conversations
+        </span>
+      </div>
+
+      <!-- Message 1 -->
+      <div class="msg-row user-msg">
+        <div class="msg-avatar user-avatar-msg">AK</div>
+        <div class="msg-content">
+          <div class="msg-sender">You</div>
+          <div class="msg-bubble user-bubble">Can you give me a technical overview of how transformer attention mechanisms actually work? I want to understand the math.</div>
+          <div class="msg-meta">
+            <span>10:42 AM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message 2 -->
+      <div class="msg-row">
+        <div class="msg-avatar ai-avatar">N</div>
+        <div class="msg-content">
+          <div class="msg-sender">Nexus AI</div>
+          <div class="msg-bubble ai-bubble">
+            <strong>Transformer Attention — Technical Breakdown</strong><br><br>
+            Since I know you prefer mathematical depth over hand-wavy explanations, let me get into the actual mechanics.<br><br>
+            The core operation is <strong>Scaled Dot-Product Attention</strong>:<br><br>
+            <code style="background:rgba(0,0,0,0.3);padding:6px 10px;border-radius:6px;display:block;font-size:13px;margin:8px 0">Attention(Q, K, V) = softmax(QKᵀ / √d_k) · V</code><br>
+            Where Q (queries), K (keys), and V (values) are linear projections of the input. The division by √d_k prevents the dot products from growing too large in high-dimensional spaces, keeping gradients stable during training.<br><br>
+            <strong>Multi-head attention</strong> runs this in parallel across h separate heads, each learning different relational patterns — some heads attend to syntactic structure, others to semantic similarity.
+            <div class="memory-tag">🧠 Referenced: your preference for mathematical rigor</div>
+          </div>
+          <div class="msg-meta">
+            <span>10:43 AM</span>
+            <div class="msg-actions">
+              <button class="icon-btn" title="Copy">📋</button>
+              <button class="icon-btn" title="Save to memory" onclick="showToast('Saved to memory ✓','success')">🧠</button>
+              <button class="icon-btn" title="Regenerate">↺</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message 3 -->
+      <div class="msg-row user-msg">
+        <div class="msg-avatar user-avatar-msg">AK</div>
+        <div class="msg-content">
+          <div class="msg-sender">You</div>
+          <div class="msg-bubble user-bubble">How does this compare to the sparse attention approaches like Longformer? I'm building something that needs to handle 100k token contexts.</div>
+          <div class="msg-meta"><span>10:48 AM</span></div>
+        </div>
+      </div>
+
+      <!-- Message 4 -->
+      <div class="msg-row">
+        <div class="msg-avatar ai-avatar">N</div>
+        <div class="msg-content">
+          <div class="msg-sender">Nexus AI</div>
+          <div class="msg-bubble ai-bubble">
+            Full attention is O(n²) in both time and memory — catastrophic at 100k tokens. <strong>Longformer</strong> solves this with a combination of:<br><br>
+            <strong>1. Sliding window attention</strong> — each token attends to a fixed window of neighbors (e.g., ±512). O(n·w) complexity.<br>
+            <strong>2. Global attention tokens</strong> — designated tokens (like [CLS]) attend to the full sequence, preserving task-critical global context.<br><br>
+            For your use case building at 100k context, I'd also look at <strong>FlashAttention-3</strong> which achieves full-attention quality at reduced memory via IO-aware tiling. Since you're on TypeScript/React, the <code style="background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px">@xenova/transformers</code> WASM port supports this natively.
+            <div class="memory-tag">🧠 Referenced: your TypeScript stack + project goal (100k context app)</div>
+          </div>
+          <div class="msg-meta">
+            <span>10:49 AM</span>
+            <div class="msg-actions">
+              <button class="icon-btn">📋</button>
+              <button class="icon-btn" onclick="showToast('Saved to memory ✓','success')">🧠</button>
+              <button class="icon-btn">↺</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File preview area (hidden by default) -->
+    <div class="file-preview-area" id="file-preview" style="display:none"></div>
+
+    <!-- Input -->
+    <div class="input-area">
+      <div class="input-tools">
+        <button class="tool-btn" onclick="triggerFileUpload()">📎 Attach</button>
+        <button class="tool-btn" onclick="showToast('Web search enabled','info')">🌐 Search</button>
+        <button class="tool-btn" onclick="showToast('Code mode on','info')">💻 Code</button>
+        <button class="tool-btn" onclick="showToast('Math mode on','info')">∑ Math</button>
+      </div>
+      <div class="input-box">
+        <textarea id="chat-input" placeholder="Ask Nexus anything…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <input type="file" id="file-input" multiple accept="image/*,.pdf,.doc,.docx,.txt" style="display:none" onchange="handleFileUpload(event)">
+        <button class="send-btn" id="send-btn" onclick="sendMessage()">→</button>
+      </div>
+      <div class="input-footer">
+        <span>Nexus uses your memories to personalize responses</span>
+        <span id="char-count">0 / ∞</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="right-panel">
+    <div class="panel-header">
+      <span class="panel-title">AI Context</span>
+      <button class="icon-btn" style="font-size:14px">×</button>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">
+        <span class="pulse-dot"></span> Active Memories
+      </div>
+      <div class="active-memories">
+        <div class="mem-pill">🛠 TypeScript + React stack <span class="mp-del" onclick="this.closest('.mem-pill').remove()">×</span></div>
+        <div class="mem-pill">🎯 Building 100k token app <span class="mp-del" onclick="this.closest('.mem-pill').remove()">×</span></div>
+        <div class="mem-pill">📚 Prefers technical depth <span class="mp-del" onclick="this.closest('.mem-pill').remove()">×</span></div>
+        <div class="mem-pill">🏙 Based in London <span class="mp-del" onclick="this.closest('.mem-pill').remove()">×</span></div>
+        <div class="mem-pill">💼 Works in fintech <span class="mp-del" onclick="this.closest('.mem-pill').remove()">×</span></div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%;justify-content:center" onclick="showPage('memory')">Manage all memories →</button>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">🔧 AI Tools</div>
+      <div class="ai-tools-list">
+        <div class="ai-tool" onclick="showToast('Code interpreter activated','info')">
+          <span class="ai-tool-icon">💻</span>
+          <span class="ai-tool-name">Code Interpreter</span>
+          <span class="ai-tool-desc">Run</span>
+        </div>
+        <div class="ai-tool" onclick="showToast('Web search activated','info')">
+          <span class="ai-tool-icon">🌐</span>
+          <span class="ai-tool-name">Web Search</span>
+          <span class="ai-tool-desc">Live</span>
+        </div>
+        <div class="ai-tool" onclick="summarizeChat()">
+          <span class="ai-tool-icon">⚡</span>
+          <span class="ai-tool-name">Summarize Chat</span>
+          <span class="ai-tool-desc">AI</span>
+        </div>
+        <div class="ai-tool" onclick="showToast('Image generation activated','info')">
+          <span class="ai-tool-icon">🎨</span>
+          <span class="ai-tool-name">Image Gen</span>
+          <span class="ai-tool-desc">Beta</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">📊 Session Stats</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px">
+          <span style="color:var(--ivory-muted)">Messages</span><span id="msg-count">4</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px">
+          <span style="color:var(--ivory-muted)">Memories used</span><span style="color:var(--teal)">7</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px">
+          <span style="color:var(--ivory-muted)">Tokens</span><span>~2,400</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px">
+          <span style="color:var(--ivory-muted)">Model</span><span style="color:var(--amethyst-light)">Nexus Pro</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     MEMORY PAGE
+════════════════════════════════ -->
+<div id="page-memory" class="page">
+  <nav class="nav">
+    <button onclick="showPage('chat')" style="color:var(--ivory-muted);margin-right:12px;font-size:16px">←</button>
+    <span class="nav-logo">Nexus<span>AI</span></span>
+    <div class="nav-actions">
+      <button class="btn btn-primary btn-sm" onclick="showToast('Memory added ✓','success')">+ Add Memory</button>
+    </div>
+  </nav>
+  <div class="memory-page-sidebar">
+    <div class="mem-cat active" onclick="filterMemory('all',this)"><span>🗃</span> All Memories <span class="mc-count">24</span></div>
+    <div class="mem-cat" onclick="filterMemory('preference',this)"><span>👤</span> Preferences <span class="mc-count">8</span></div>
+    <div class="mem-cat" onclick="filterMemory('work',this)"><span>💼</span> Work & Skills <span class="mc-count">6</span></div>
+    <div class="mem-cat" onclick="filterMemory('project',this)"><span>🎯</span> Projects <span class="mc-count">5</span></div>
+    <div class="mem-cat" onclick="filterMemory('profile',this)"><span>🌍</span> Profile <span class="mc-count">3</span></div>
+    <div class="mem-cat" onclick="filterMemory('interest',this)"><span>⭐</span> Interests <span class="mc-count">2</span></div>
+  </div>
+  <div class="memory-content">
+    <div class="memory-header">
+      <h1>Memory Center <span class="chip chip-teal" style="font-size:13px;vertical-align:middle">24 memories</span></h1>
+      <p>Everything Nexus has learned about you. Edit or delete anything at any time.</p>
+    </div>
+    <div class="memory-toolbar">
+      <input class="mem-search" type="text" placeholder="🔍  Search memories..." oninput="searchMemories(this.value)">
+      <select style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-sm);padding:8px 14px;font-size:13px;color:var(--ivory);outline:none">
+        <option>Sort: Recent</option>
+        <option>Sort: Oldest</option>
+        <option>Sort: Category</option>
+      </select>
+    </div>
+    <div class="memory-grid" id="memory-grid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     SETTINGS PAGE
+════════════════════════════════ -->
+<div id="page-settings" class="page">
+  <nav class="nav">
+    <button onclick="showPage('chat')" style="color:var(--ivory-muted);margin-right:12px;font-size:16px">←</button>
+    <span class="nav-logo">Nexus<span>AI</span></span>
+  </nav>
+  <div class="settings-sidebar">
+    <div class="settings-nav-item active" onclick="showSettingsTab('profile',this)">👤 Profile</div>
+    <div class="settings-nav-item" onclick="showSettingsTab('ai',this)">🤖 AI Personality</div>
+    <div class="settings-nav-item" onclick="showSettingsTab('privacy',this)">🔒 Privacy</div>
+    <div class="settings-nav-item" onclick="showSettingsTab('notifications',this)">🔔 Notifications</div>
+    <div class="settings-nav-item" onclick="showSettingsTab('billing',this)">💳 Billing</div>
+  </div>
+  <div class="settings-content" id="settings-content">
+    <!-- Loaded by JS -->
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     DASHBOARD PAGE
+════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <nav class="nav">
+    <button onclick="showPage('landing')" style="color:var(--ivory-muted);margin-right:12px;font-size:16px">←</button>
+    <span class="nav-logo">Nexus<span>AI</span></span>
+    <div class="nav-actions">
+      <button class="btn btn-primary btn-sm" onclick="showPage('chat')">Open Chat →</button>
+    </div>
+  </nav>
+  <div style="display:flex;flex:1;height:100vh;overflow:hidden">
+    <div style="width:200px;flex-shrink:0;background:var(--bg-surface);border-right:1px solid var(--border-subtle);padding:80px 12px 16px">
+      <div class="sidebar-nav-item active" onclick="showPage('dashboard')"><span class="icon">📊</span> Dashboard</div>
+      <div class="sidebar-nav-item" onclick="showPage('chat')"><span class="icon">💬</span> Chat</div>
+      <div class="sidebar-nav-item" onclick="showPage('memory')"><span class="icon">🧠</span> Memories</div>
+      <div class="sidebar-nav-item" onclick="showPage('settings')"><span class="icon">⚙️</span> Settings</div>
+    </div>
+    <div class="dash-main">
+      <div class="dash-welcome">
+        <h1>Good morning, Alex ☀️</h1>
+        <p>Here's your intelligence overview for today</p>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat-card">
+          <div class="dsc-header">
+            <span class="dsc-label">Total Conversations</span>
+            <div class="dsc-icon fi-purple" style="width:32px;height:32px;font-size:16px">💬</div>
+          </div>
+          <div class="dsc-num grad-text">247</div>
+          <div class="dsc-change up">↑ 12 this week</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dsc-header">
+            <span class="dsc-label">Saved Memories</span>
+            <div class="dsc-icon fi-teal">🧠</div>
+          </div>
+          <div class="dsc-num" style="color:var(--teal)">24</div>
+          <div class="dsc-change up">↑ 3 this week</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dsc-header">
+            <span class="dsc-label">Messages Sent</span>
+            <div class="dsc-icon fi-magenta">⚡</div>
+          </div>
+          <div class="dsc-num grad-text-2">3.2K</div>
+          <div class="dsc-change up">↑ 8% vs last mo.</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dsc-header">
+            <span class="dsc-label">AI Accuracy</span>
+            <div class="dsc-icon" style="background:rgba(242,201,76,0.1);border:1px solid rgba(242,201,76,0.2)">⭐</div>
+          </div>
+          <div class="dsc-num" style="color:var(--gold)">96%</div>
+          <div class="dsc-change up">↑ 4% (memory boost)</div>
+        </div>
+      </div>
+      <div class="dash-grid">
+        <div class="dash-card">
+          <div class="dash-card-title">📈 Activity (last 7 days)</div>
+          <div class="chart-area" id="dash-chart"></div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title">🤖 Model Usage</div>
+          <div class="model-usage">
+            <div class="usage-row">
+              <div class="usage-info"><span class="usage-name">Nexus Pro</span><span class="usage-pct">68%</span></div>
+              <div class="usage-bar"><div class="usage-fill" style="width:68%;background:linear-gradient(90deg,var(--amethyst),var(--amethyst-light))"></div></div>
+            </div>
+            <div class="usage-row">
+              <div class="usage-info"><span class="usage-name">Nexus Fast</span><span class="usage-pct">24%</span></div>
+              <div class="usage-bar"><div class="usage-fill" style="width:24%;background:linear-gradient(90deg,var(--teal-dark),var(--teal))"></div></div>
+            </div>
+            <div class="usage-row">
+              <div class="usage-info"><span class="usage-name">Nexus Reason</span><span class="usage-pct">8%</span></div>
+              <div class="usage-bar"><div class="usage-fill" style="width:8%;background:linear-gradient(90deg,var(--magenta),var(--magenta-light))"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">🕐 Recent Activity</div>
+        <div class="activity-list">
+          <div class="activity-item"><div class="ai-dot" style="background:var(--amethyst)"></div><span class="activity-text"><strong>Research on LLMs</strong> — 4 messages, 2 memories used</span><span class="activity-time">10 min ago</span></div>
+          <div class="activity-item"><div class="ai-dot" style="background:var(--teal)"></div><span class="activity-text">🧠 New memory saved: <strong>"Building 100k token app"</strong></span><span class="activity-time">12 min ago</span></div>
+          <div class="activity-item"><div class="ai-dot" style="background:var(--magenta)"></div><span class="activity-text"><strong>Q3 Report Analysis</strong> — summarized (18 pages)</span><span class="activity-time">2 hrs ago</span></div>
+          <div class="activity-item"><div class="ai-dot" style="background:var(--gold)"></div><span class="activity-text"><strong>Brand Identity Ideas</strong> — 12 messages</span><span class="activity-time">5 hrs ago</span></div>
+          <div class="activity-item"><div class="ai-dot" style="background:var(--amethyst)"></div><span class="activity-text">🧠 Memory updated: <strong>"Prefers sans-serif in designs"</strong></span><span class="activity-time">Yesterday</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ── Page routing ──
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  if(pg){
+    pg.classList.add('active');
+    if(name==='memory') renderMemories();
+    if(name==='settings') renderSettings('profile');
+    if(name==='dashboard') renderChart();
+  }
+}
+
+// ── Toast ──
+function showToast(msg,type='info'){
+  const c=document.getElementById('toast-container');
+  const t=document.createElement('div');
+  t.className=`toast toast-${type}`;
+  t.textContent=(type==='success'?'✓  ':type==='info'?'ℹ  ':'')+msg;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300)},3000);
+}
+
+// ── Chat logic ──
+const chats=[
+  {id:0,name:'Research on LLMs',pinned:true},
+  {id:1,name:'Q3 Report Analysis',pinned:false},
+  {id:2,name:'Brand Identity Ideas',pinned:false},
+  {id:3,name:'SaaS Pricing Strategy',pinned:false},
+  {id:4,name:'TypeScript Generics Deep Dive',pinned:false},
+];
+let currentChat=0;
+let msgCount=4;
+let isTyping=false;
+
+function loadChat(id){
+  currentChat=id;
+  document.querySelectorAll('.chat-item').forEach((el,i)=>{
+    el.classList.toggle('active',i===id);
+  });
+  if(chats[id]) document.getElementById('chat-title').value=chats[id].name;
+}
+
+function newChat(){
+  const name='New Chat '+(chats.length+1);
+  chats.push({id:chats.length,name,pinned:false});
+  const list=document.getElementById('chat-list');
+  const item=document.createElement('div');
+  item.className='chat-item active';
+  item.innerHTML=`<div class="chat-item-name">${name}</div><div class="chat-item-preview">Start a new conversation...</div><div class="chat-item-meta"><span class="chat-item-time">Just now</span></div>`;
+  item.onclick=()=>loadChat(chats.length-1);
+  document.querySelectorAll('.chat-item').forEach(el=>el.classList.remove('active'));
+  list.appendChild(item);
+  document.getElementById('chat-title').value=name;
+  showToast('New chat created','success');
+}
+
+function deleteChat(id){
+  if(confirm('Delete this conversation?')) showToast('Conversation deleted','info');
+}
+function renameChat(id){
+  const n=prompt('Rename chat:',chats[id]?.name||'Chat');
+  if(n){chats[id].name=n;showToast('Renamed ✓','success');}
+}
+function updateTitle(v){showToast('Title saved ✓','success')}
+function filterChats(q){
+  document.querySelectorAll('.chat-item').forEach(el=>{
+    const t=el.querySelector('.chat-item-name')?.textContent||'';
+    el.style.display=t.toLowerCase().includes(q.toLowerCase())?'':'none';
+  });
+}
+
+// ── Messaging ──
+const aiReplies=[
+  "Based on your preference for technical depth, let me elaborate further. The key insight here is that attention patterns emerge naturally from training — the model learns which relationships matter without explicit supervision.",
+  "Great question. Given your background in fintech and TypeScript, you might want to consider using transformer.js which compiles to WebAssembly and runs entirely client-side — no API calls needed.",
+  "I recall from our earlier conversations that you're building for 100k token contexts. In that case, ring attention (as used in Gemini 1.5) might be more suitable than sliding window approaches.",
+  "This connects to something you mentioned before about wanting to launch by Q4 2026. For your timeline, I'd recommend starting with a smaller context window (32k) and scaling up once the core UX is validated.",
+  "Interesting. Based on your London timezone and the fintech context, compliance with the EU AI Act will be relevant here — particularly the transparency requirements for AI-assisted decision making."
+];
+let replyIdx=0;
+
+function sendMessage(){
+  const inp=document.getElementById('chat-input');
+  const msg=inp.value.trim();
+  if(!msg||isTyping) return;
+  inp.value='';
+  inp.style.height='';
+  appendUserMsg(msg);
+  msgCount++;
+  document.getElementById('msg-count').textContent=msgCount;
+  showTyping();
+  setTimeout(()=>{
+    hideTyping();
+    appendAIMsg(aiReplies[replyIdx%aiReplies.length]);
+    replyIdx++;
+    msgCount++;
+    document.getElementById('msg-count').textContent=msgCount;
+  },1800+Math.random()*1200);
+}
+
+function appendUserMsg(text){
+  const c=document.getElementById('messages-container');
+  const now=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  const el=document.createElement('div');
+  el.className='msg-row user-msg';
+  el.innerHTML=`<div class="msg-avatar user-avatar-msg">AK</div>
+    <div class="msg-content">
+      <div class="msg-sender">You</div>
+      <div class="msg-bubble user-bubble">${escHtml(text)}</div>
+      <div class="msg-meta"><span>${now}</span></div>
+    </div>`;
+  c.appendChild(el);
+  c.scrollTop=c.scrollHeight;
+}
+
+function appendAIMsg(text){
+  const c=document.getElementById('messages-container');
+  const now=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const el=document.createElement('div');
+  el.className='msg-row';
+  el.innerHTML=`<div class="msg-avatar ai-avatar">N</div>
+    <div class="msg-content">
+      <div class="msg-sender">Nexus AI</div>
+      <div class="msg-bubble ai-bubble" id="streaming-bubble"></div>
+      <div class="msg-meta">
+        <span>${now}</span>
+        <div class="msg-actions">
+          <button class="icon-btn" title="Copy" onclick="showToast('Copied!','success')">📋</button>
+          <button class="icon-btn" title="Save to memory" onclick="showToast('Saved to memory ✓','success')">🧠</button>
+          <button class="icon-btn" title="Regenerate">↺</button>
+        </div>
+      </div>
+    </div>`;
+  c.appendChild(el);
+  c.scrollTop=c.scrollHeight;
+  streamText(document.getElementById('streaming-bubble'),text);
+}
+
+function streamText(el,text){
+  let i=0;
+  el.textContent='';
+  const interval=setInterval(()=>{
+    if(i<text.length){
+      el.textContent+=text[i];
+      i++;
+      el.closest('.messages').scrollTop=99999;
+    } else {
+      clearInterval(interval);
+      el.innerHTML=el.innerHTML.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    }
+  },18);
+}
+
+function showTyping(){
+  isTyping=true;
+  const c=document.getElementById('messages-container');
+  const t=document.createElement('div');
+  t.className='typing-indicator';
+  t.id='typing-ind';
+  t.innerHTML=`<div class="msg-avatar ai-avatar" style="width:34px;height:34px;font-size:12px">N</div>
+    <div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  c.appendChild(t);
+  c.scrollTop=c.scrollHeight;
+}
+
+function hideTyping(){
+  isTyping=false;
+  const t=document.getElementById('typing-ind');
+  if(t) t.remove();
+}
+
+function handleKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}
+}
+
+function autoResize(ta){
+  ta.style.height='';
+  ta.style.height=Math.min(ta.scrollHeight,120)+'px';
+  document.getElementById('char-count').textContent=ta.value.length+' / ∞';
+}
+
+function triggerFileUpload(){document.getElementById('file-input').click();}
+
+function handleFileUpload(e){
+  const files=Array.from(e.target.files);
+  const area=document.getElementById('file-preview');
+  area.style.display='flex';
+  files.forEach(f=>{
+    const chip=document.createElement('div');
+    chip.className='file-chip';
+    const ext=f.name.split('.').pop().toUpperCase();
+    chip.innerHTML=`<span>${ext==='PDF'?'📄':ext==='PNG'||ext==='JPG'?'🖼':'📎'}</span>
+      <span>${f.name.length>20?f.name.substring(0,20)+'...':f.name}</span>
+      <span class="fc-remove" onclick="this.closest('.file-chip').remove();checkFileArea()">×</span>`;
+    area.appendChild(chip);
+  });
+  showToast(`${files.length} file(s) attached`,'success');
+}
+
+function checkFileArea(){
+  const area=document.getElementById('file-preview');
+  if(!area.querySelector('.file-chip')) area.style.display='none';
+}
+
+function summarizeChat(){
+  showToast('Generating summary…','info');
+  setTimeout(()=>showToast('Summary ready — 5 key points','success'),2000);
+}
+
+function escHtml(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Memory page ──
+const memoriesData=[
+  {id:1,category:'preference',catLabel:'Preference',title:'Communication Style',value:'Prefers technical, mathematically precise explanations with minimal hand-waving.',date:'Jun 10, 2026',source:'Chat #247',tags:['style','communication']},
+  {id:2,category:'work',catLabel:'Tech Stack',title:'Primary Technologies',value:'TypeScript, React, Supabase. Occasionally uses Python for ML experiments.',date:'Jun 8, 2026',source:'Chat #242',tags:['tech','stack','code']},
+  {id:3,category:'project',catLabel:'Project',title:'Main 2026 Project',value:'Building a document intelligence SaaS targeting 100k token context windows.',date:'Jun 10, 2026',source:'Chat #246',tags:['saas','ai','2026']},
+  {id:4,category:'profile',catLabel:'Profile',title:'Location & Industry',value:'Based in London, UK. Works in the fintech sector.',date:'May 15, 2026',source:'Chat #198',tags:['location','work']},
+  {id:5,category:'preference',catLabel:'Preference',title:'Design Aesthetic',value:'Prefers minimal, dark-mode interfaces. Strongly dislikes default Bootstrap styling.',date:'Jun 5, 2026',source:'Chat #235',tags:['design','UI']},
+  {id:6,category:'interest',catLabel:'Interest',title:'Research Focus',value:'Deeply interested in transformer architecture research, particularly efficient attention mechanisms.',date:'Jun 10, 2026',source:'Chat #247',tags:['research','ML','transformers']},
+  {id:7,category:'work',catLabel:'Work',title:'Target Launch',value:'Plans to launch MVP by Q4 2026. Currently in prototype phase.',date:'Jun 9, 2026',source:'Chat #244',tags:['timeline','launch']},
+  {id:8,category:'preference',catLabel:'Preference',title:'Response Length',value:'Prefers comprehensive, in-depth answers for technical topics. Shorter for general questions.',date:'Jun 3, 2026',source:'Chat #231',tags:['style']},
+];
+
+function renderMemories(filter='all'){
+  const grid=document.getElementById('memory-grid');
+  if(!grid) return;
+  const data=filter==='all'?memoriesData:memoriesData.filter(m=>m.category===filter);
+  grid.innerHTML=data.map(m=>`
+    <div class="memory-card-item">
+      <div class="mci-header">
+        <span class="mci-category chip ${getCatChip(m.category)}">${m.catLabel}</span>
+        <div class="mci-actions">
+          <button class="icon-btn" onclick="showToast('Memory updated','success')">✏️</button>
+          <button class="icon-btn" onclick="this.closest('.memory-card-item').remove();showToast('Memory deleted','info')">🗑</button>
+        </div>
+      </div>
+      <div class="mci-title">${m.title}</div>
+      <div class="mci-value">${m.value}</div>
+      <div class="mci-tags">${m.tags.map(t=>`<span class="mci-tag">#${t}</span>`).join('')}</div>
+      <div class="mci-footer">
+        <span class="mci-date">${m.date}</span>
+        <span class="mci-source">from ${m.source}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function getCatChip(cat){
+  const map={preference:'chip-purple',work:'chip-teal',project:'chip-magenta',profile:'chip-teal',interest:'chip-purple'};
+  return map[cat]||'chip-purple';
+}
+
+function filterMemory(cat,el){
+  document.querySelectorAll('.mem-cat').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  renderMemories(cat);
+}
+
+function searchMemories(q){
+  document.querySelectorAll('.memory-card-item').forEach(el=>{
+    const t=el.querySelector('.mci-title')?.textContent||'';
+    const v=el.querySelector('.mci-value')?.textContent||'';
+    el.style.display=(t+v).toLowerCase().includes(q.toLowerCase())?'':'none';
+  });
+}
+
+// ── Settings ──
+const settingsTabs={
+  profile:`
+    <div class="settings-section">
+      <div class="settings-section-title">Profile</div>
+      <div class="settings-section-desc">Manage your account information.</div>
+      <div class="profile-avatar-row">
+        <div class="profile-avatar-large">AK</div>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('Avatar updated','success')">Change photo</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="form-field"><label class="form-label">First name</label><input class="form-input" value="Alex"></div>
+        <div class="form-field"><label class="form-label">Last name</label><input class="form-input" value="Kim"></div>
+      </div>
+      <div class="form-field"><label class="form-label">Email</label><input class="form-input" type="email" value="alex.kim@example.com"></div>
+      <div class="form-field"><label class="form-label">Role</label><input class="form-input" value="Senior Engineer, Fintech"></div>
+      <button class="btn btn-primary btn-sm" onclick="showToast('Profile saved ✓','success')">Save changes</button>
+    </div>`,
+  ai:`
+    <div class="settings-section">
+      <div class="settings-section-title">AI Personality</div>
+      <div class="settings-section-desc">Customize how Nexus communicates with you.</div>
+      <p style="font-size:13px;color:var(--ivory-dim);margin-bottom:16px">Select a personality style:</p>
+      <div class="personality-grid">
+        <div class="personality-opt selected" onclick="selectPersonality(this)">
+          <div class="po-icon">🎓</div>
+          <div class="po-name">Technical</div>
+          <div class="po-desc">Deep, precise, code-first</div>
+        </div>
+        <div class="personality-opt" onclick="selectPersonality(this)">
+          <div class="po-icon">🤝</div>
+          <div class="po-name">Collaborative</div>
+          <div class="po-desc">Warm, exploratory</div>
+        </div>
+        <div class="personality-opt" onclick="selectPersonality(this)">
+          <div class="po-icon">⚡</div>
+          <div class="po-name">Direct</div>
+          <div class="po-desc">Concise, no fluff</div>
+        </div>
+        <div class="personality-opt" onclick="selectPersonality(this)">
+          <div class="po-icon">🎨</div>
+          <div class="po-name">Creative</div>
+          <div class="po-desc">Lateral, playful</div>
+        </div>
+      </div>
+      <div class="settings-divider"></div>
+      <div class="form-field"><label class="form-label">Custom AI name</label><input class="form-input" value="Nexus" placeholder="e.g. Aria, Max"></div>
+      <div class="form-field"><label class="form-label">Response language</label>
+        <select class="form-select"><option>English (UK)</option><option>English (US)</option><option>Arabic</option><option>French</option></select>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="showToast('AI personality saved ✓','success')">Save personality</button>
+    </div>`,
+  privacy:`
+    <div class="settings-section">
+      <div class="settings-section-title">Privacy Controls</div>
+      <div class="settings-section-desc">Control what Nexus remembers and how your data is used.</div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">Enable Persistent Memory</div><div class="toggle-desc">Allow Nexus to remember information across conversations</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">Auto-save Preferences</div><div class="toggle-desc">Automatically detect and save new preferences from chats</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">Share Usage Analytics</div><div class="toggle-desc">Help improve Nexus with anonymized usage data</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">Conversation Training</div><div class="toggle-desc">Allow conversations to improve model quality</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+      <div class="settings-divider"></div>
+      <button class="btn btn-ghost btn-sm" onclick="showPage('memory')" style="margin-right:12px">View all memories →</button>
+      <button class="btn btn-ghost btn-sm" style="color:var(--danger);border-color:rgba(255,91,91,0.3)" onclick="showToast('All memories cleared','info')">Clear all memories</button>
+    </div>`,
+  notifications:`
+    <div class="settings-section">
+      <div class="settings-section-title">Notifications</div>
+      <div class="settings-section-desc">Choose what you want to be notified about.</div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">New memory saved</div><div class="toggle-desc">Notify when Nexus learns something new about you</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">Weekly digest</div><div class="toggle-desc">Summary of your AI usage and insights</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">New model releases</div><div class="toggle-desc">Be first to know about Nexus improvements</div></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+    </div>`,
+  billing:`
+    <div class="settings-section">
+      <div class="settings-section-title">Billing</div>
+      <div class="settings-section-desc">Manage your subscription and payment.</div>
+      <div class="card" style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+        <div style="font-size:28px">✦</div>
+        <div><div style="font-weight:600;font-size:15px;color:var(--amethyst-light)">Pro Plan</div><div style="font-size:13px;color:var(--ivory-muted)">$18/month · Renews Jul 11, 2026</div></div>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto">Manage plan</button>
+      </div>
+      <div class="form-field"><label class="form-label">Payment method</label><input class="form-input" value="•••• •••• •••• 4242" readonly></div>
+      <button class="btn btn-ghost btn-sm" onclick="showToast('Invoice downloaded','success')">Download invoices</button>
+    </div>`
+};
+
+function renderSettings(tab){
+  const c=document.getElementById('settings-content');
+  if(c) c.innerHTML=settingsTabs[tab]||settingsTabs.profile;
+}
+
+function showSettingsTab(tab,el){
+  document.querySelectorAll('.settings-nav-item').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  renderSettings(tab);
+}
+
+function selectPersonality(el){
+  document.querySelectorAll('.personality-opt').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');
+  showToast('Personality updated','success');
+}
+
+// ── Dashboard chart ──
+function renderChart(){
+  const chart=document.getElementById('dash-chart');
+  if(!chart) return;
+  const data=[12,28,18,35,24,42,38];
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const max=Math.max(...data);
+  chart.innerHTML=data.map((v,i)=>`
+    <div class="chart-bar-wrap">
+      <div class="chart-bar" style="height:${Math.round((v/max)*140)}px" title="${v} messages"></div>
+      <span class="chart-label">${days[i]}</span>
+    </div>
+  `).join('');
+}
+
+// Init
+renderSettings('profile');
+renderMemories();
+</script>
+</body>
+</html>
