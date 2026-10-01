@@ -1,0 +1,41 @@
+/* ─── PAGE MANAGER ─── */
+.page{display:none}
+.page.active{display:flex;flex-direction:column;min-height:100vh}
+
+/* ─── GLOBAL NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;padding:0 32px;
+  background:rgba(249,248,246,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
+.nav-logo span{color:var(--indigo);font-weight:800}
+.nav-links{display:flex;gap:4px;margin-left:48px}
+.nav-link{padding:6px 14px;border-radius:var(--r-full);font-size:14px;color:var(--text-2);transition:all 0.15s;font-weight:500}
+.nav-link:hover{color:var(--text);background:var(--bg-elevated)}
+.nav-link.active{color:var(--text);background:var(--bg-elevated)}
+.nav-actions{margin-left:auto;display:flex;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:var(--r-full);font-size:14px;font-weight:500;transition:all 0.15s;cursor:pointer;letter-spacing:-0.1px}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text-2)}
+.btn-ghost:hover{border-color:var(--border-strong);color:var(--text);background:var(--bg-elevated)}
+.btn-primary{background:var(--indigo);border:1px solid var(--indigo);color:#fff}
+.btn-primary:hover{background:var(--indigo-hover);border-color:var(--indigo-hover)}
+.btn-teal{background:var(--teal);border:1px solid var(--teal);color:#fff;font-weight:600}
+.btn-teal:hover{background:var(--teal-dark);border-color:var(--teal-dark)}
+.btn-sm{padding:6px 14px;font-size:13px}
+
+/* ─── CARDS ─── */
+.glass{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm)}
+.card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow-xs)}
+
+/* ─── CHIP ─── */
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:var(--r-full);font-size:12px;font-weight:500}
+.chip-purple{background:var(--indigo-pale);color:var(--indigo);border:1px solid rgba(70,66,207,0.2)}
+.chip-teal{background:var(--teal-pale);color:var(--teal);border:1px solid rgba(26,122,95,0.2)}
+.chip-magenta{background:#F3EEF9;color:#7C4FA8;border:1px solid rgba(124,79,168,0.2)}
+
+/* ─── PULSE DOT ─── */
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);position:relative;display:inline-block}
+.pulse-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:rgba(26,122,95,0.2);animation:pulseAnim 2s infinite}
+@keyframes pulseAnim{0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.5);opacity:0}}
+
+/* ─── ACCENT TEXT (replaces gradient text) ─── */
+.grad-text{color:var(--indigo);font-weight:inherit}
+.grad-text-2{color:var(--teal);font-weight:inherit}

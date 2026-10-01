@@ -1,0 +1,9 @@
+/* ═══════════════════════════════════
+   MODAL
+═══════════════════════════════════ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(17,17,23,0.4);z-index:300;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:28px;width:100%;max-width:440px;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-box h3{font-family:var(--font-display);font-size:18px;margin-bottom:16px;font-weight:600;color:var(--text)}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.auth-error{display:none;background:var(--danger-pale);border:1px solid rgba(190,44,44,0.3);color:var(--danger);padding:10px 14px;border-radius:var(--r-sm);font-size:13px;margin-bottom:16px}

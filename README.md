@@ -16,7 +16,7 @@
 
 ## 🛠️ Tech Stack
 
-* **Frontend:** Single-page vanilla HTML/CSS/JavaScript (`nexus-ai-chat.html`) — no build step required.
+* **Frontend:** Single-page vanilla HTML/CSS/JavaScript (`nexus-ai-chat.html` + `css/` + `js/`) — no build step required.
 * **Backend:** Python, [FastAPI](https://fastapi.tiangolo.com/), SQLAlchemy 2.0 ORM
 * **Database:** SQLite by default (file-based, zero setup); swappable for PostgreSQL via `DATABASE_URL`
 * **Auth:** JWT access tokens (`python-jose`), password hashing with `bcrypt`
@@ -28,7 +28,12 @@
 
 ```
 Nexus-AI-Chat/
-├── nexus-ai-chat.html      # Entire frontend (single file)
+├── nexus-ai-chat.html      # Frontend entry point (markup shell)
+├── css/                    # tokens, base, one stylesheet per page, toast, modal, responsive
+├── js/
+│   ├── core/               # config + state, api client, router, toast
+│   ├── features/           # auth, chat, messaging, memory, settings, dashboard
+│   └── main.js             # Boot
 ├── backend/
 │   ├── app/
 │   │   ├── main.py         # FastAPI app, CORS, router registration

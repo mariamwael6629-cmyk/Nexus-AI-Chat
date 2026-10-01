@@ -1,0 +1,82 @@
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  /* ── Surfaces ── */
+  --bg:#F9F8F6;
+  --bg-surface:#FFFFFF;
+  --bg-elevated:#F4F2EE;
+  --bg-inset:#ECEAE5;
+  --bg-card:#FFFFFF;
+  --bg-glass:rgba(255,255,255,0.92);
+
+  /* ── Borders ── */
+  --border:#E5E3DE;
+  --border-strong:#C8C5BE;
+  --border-focus:rgba(70,66,207,0.4);
+  --border-subtle:#E5E3DE;
+  --border-teal:rgba(26,122,95,0.25);
+  --border-glow:rgba(70,66,207,0.3);
+
+  /* ── Brand ── */
+  --indigo:#4642CF;
+  --indigo-hover:#3B38B8;
+  --indigo-pale:#EEEEFA;
+  --indigo-mid:#8B89E0;
+  --indigo-deep:#2E2C9E;
+  --teal:#1A7A5F;
+  --teal-light:#48B899;
+  --teal-dark:#14634D;
+  --teal-pale:#EAF3EF;
+
+  /* ── Text ── */
+  --text:#111117;
+  --text-2:#54525F;
+  --text-3:#9896A3;
+  --ivory:#111117;
+  --ivory-dim:#54525F;
+  --ivory-muted:#9896A3;
+
+  /* ── Semantic ── */
+  --success:#15803D;
+  --success-pale:#DCFCE7;
+  --danger:#BE2C2C;
+  --danger-pale:#FEE2E2;
+  --gold:#B45309;
+  --gold-pale:#FEF3C7;
+
+  /* ── Legacy compat (used by JS-generated HTML) ── */
+  --amethyst:#4642CF;
+  --amethyst-light:#8B89E0;
+  --amethyst-pale:#EEEEFA;
+  --magenta:#9D6FC4;
+  --magenta-light:#B48FD8;
+  --bg-void:#F9F8F6;
+  --shadow-glow:0 4px 16px rgba(70,66,207,0.12);
+  --shadow-teal:0 4px 12px rgba(26,122,95,0.10);
+
+  /* ── Shadows ── */
+  --shadow-xs:0 1px 2px rgba(17,17,23,0.05);
+  --shadow-sm:0 1px 4px rgba(17,17,23,0.06),0 2px 6px rgba(17,17,23,0.03);
+  --shadow-md:0 4px 16px rgba(17,17,23,0.08),0 1px 4px rgba(17,17,23,0.04);
+  --shadow-lg:0 12px 40px rgba(17,17,23,0.10),0 2px 8px rgba(17,17,23,0.05);
+
+  /* ── Radius ── */
+  --r-xs:4px;
+  --r-sm:6px;
+  --r-md:8px;
+  --r-lg:12px;
+  --r-xl:16px;
+  --r-2xl:24px;
+  --r-full:9999px;
+
+  /* ── Typography ── */
+  --font-display:'Plus Jakarta Sans',sans-serif;
+  --font-body:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;background:none;font-family:var(--font-body)}
+input,textarea,select{font-family:var(--font-body)}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px}
