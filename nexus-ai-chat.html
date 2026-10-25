@@ -533,6 +533,16 @@ input,textarea,select{font-family:var(--font-body)}
 .ei-wrap{display:contents}
 @media (max-width:1240px){.snap-a{left:-10px;top:-90px}.snap-b{right:-10px;top:-100px}.snap-c{display:none}.hero-preview{margin-top:80px}}
 @media (max-width:640px){.snap{width:120px;padding:7px 7px 9px}.snap-a{top:-150px}.snap-b{top:-160px}.snap-img{aspect-ratio:2}.snap figcaption{font-size:12px}.snap-img{font-size:11px}.hero-preview{margin-top:180px}}
+/* Chat header on phones: title gets the room; pin chip and Summarize hide,
+   the memory badge stays on one line. */
+@media (max-width:640px){
+  .chat-header{padding:0 12px;gap:8px}
+  .chat-title-edit{min-width:0;flex:1;width:0}
+  .chat-pin,.hdr-sum,.hdr-more{display:none}
+  .chat-header-actions{margin-left:0}
+  .hdr-btn{white-space:nowrap}
+  .memory-badge{font-size:12px;padding:5px 9px}
+}
 @media (max-width:560px){.nav{padding:0 16px}.nav-links{display:none}.nav-actions{gap:6px}.nav-actions .btn-ghost{display:none}.mem-split{grid-template-columns:1fr!important;gap:32px!important}}
 </style>
 </head>
@@ -916,11 +926,11 @@ input,textarea,select{font-family:var(--font-body)}
       <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Menu">☰</button>
       <button onclick="showPage('landing')" style="color:var(--ivory-muted);font-size:18px;padding:4px 8px;border-radius:4px;background:var(--bg-card)">←</button>
       <input class="chat-title-edit" id="chat-title" value="Research on LLMs" onchange="updateTitle(this.value)">
-      <span class="chip chip-teal" style="font-size:11px">📌 Pinned</span>
+      <span class="chip chip-teal chat-pin" style="font-size:11px">📌 Pinned</span>
       <div class="chat-header-actions">
         <button class="hdr-btn memory-badge" id="chat-memory-badge" onclick="showPage('memory')">🧠 0 memories active</button>
-        <button class="hdr-btn" onclick="summarizeChat()">⚡ Summarize</button>
-        <button class="hdr-btn">⋯ More</button>
+        <button class="hdr-btn hdr-sum" onclick="summarizeChat()">⚡ Summarize</button>
+        <button class="hdr-btn hdr-more">⋯ More</button>
       </div>
     </div>
 
