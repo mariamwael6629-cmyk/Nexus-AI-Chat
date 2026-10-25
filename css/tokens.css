@@ -11,53 +11,53 @@
   /* ── Borders ── */
   --border:#E5E3DE;
   --border-strong:#C8C5BE;
-  --border-focus:rgba(70,66,207,0.4);
+  --border-focus:rgba(158,61,46,0.4);
   --border-subtle:#E5E3DE;
-  --border-teal:rgba(26,122,95,0.25);
-  --border-glow:rgba(70,66,207,0.3);
+  --border-teal:rgba(115,44,33,0.25);
+  --border-glow:rgba(158,61,46,0.3);
 
   /* ── Brand ── */
-  --indigo:#4642CF;
-  --indigo-hover:#3B38B8;
-  --indigo-pale:#EEEEFA;
-  --indigo-mid:#8B89E0;
-  --indigo-deep:#2E2C9E;
-  --teal:#1A7A5F;
-  --teal-light:#48B899;
-  --teal-dark:#14634D;
-  --teal-pale:#EAF3EF;
+  --indigo:#9E3D2E;
+  --indigo-hover:#9C3E30;
+  --indigo-pale:#F5F4F3;
+  --indigo-mid:#9E3D2E;
+  --indigo-deep:#9D3C2D;
+  --teal:#732C21;
+  --teal-light:#934539;
+  --teal-dark:#5C241B;
+  --teal-pale:#F0EEED;
 
   /* ── Text ── */
-  --text:#111117;
-  --text-2:#54525F;
-  --text-3:#9896A3;
-  --ivory:#111117;
-  --ivory-dim:#54525F;
-  --ivory-muted:#9896A3;
+  --text:#161412;
+  --text-2:#5F5852;
+  --text-3:#A39C96;
+  --ivory:#161412;
+  --ivory-dim:#5F5852;
+  --ivory-muted:#A39C96;
 
   /* ── Semantic ── */
-  --success:#15803D;
-  --success-pale:#DCFCE7;
+  --success:#732C22;
+  --success-pale:#EEECEA;
   --danger:#BE2C2C;
   --danger-pale:#FEE2E2;
   --gold:#B45309;
   --gold-pale:#FEF3C7;
 
   /* ── Legacy compat (used by JS-generated HTML) ── */
-  --amethyst:#4642CF;
-  --amethyst-light:#8B89E0;
-  --amethyst-pale:#EEEEFA;
-  --magenta:#9D6FC4;
-  --magenta-light:#B48FD8;
+  --amethyst:#9E3D2E;
+  --amethyst-light:#9E3D2E;
+  --amethyst-pale:#F5F4F3;
+  --magenta:#91473B;
+  --magenta-light:#974235;
   --bg-void:#F9F8F6;
-  --shadow-glow:0 4px 16px rgba(70,66,207,0.12);
-  --shadow-teal:0 4px 12px rgba(26,122,95,0.10);
+  --shadow-glow:0 4px 16px rgba(158,61,46,0.12);
+  --shadow-teal:0 4px 12px rgba(115,44,33,0.10);
 
   /* ── Shadows ── */
-  --shadow-xs:0 1px 2px rgba(17,17,23,0.05);
-  --shadow-sm:0 1px 4px rgba(17,17,23,0.06),0 2px 6px rgba(17,17,23,0.03);
-  --shadow-md:0 4px 16px rgba(17,17,23,0.08),0 1px 4px rgba(17,17,23,0.04);
-  --shadow-lg:0 12px 40px rgba(17,17,23,0.10),0 2px 8px rgba(17,17,23,0.05);
+  --shadow-xs:0 1px 2px rgba(22,20,18,0.05);
+  --shadow-sm:0 1px 4px rgba(22,20,18,0.06),0 2px 6px rgba(22,20,18,0.03);
+  --shadow-md:0 4px 16px rgba(22,20,18,0.08),0 1px 4px rgba(22,20,18,0.04);
+  --shadow-lg:0 12px 40px rgba(22,20,18,0.10),0 2px 8px rgba(22,20,18,0.05);
 
   /* ── Radius ── */
   --r-xs:4px;
@@ -69,7 +69,7 @@
   --r-full:9999px;
 
   /* ── Typography ── */
-  --font-display:'Plus Jakarta Sans',sans-serif;
+  --font-display:'Playfair Display',Georgia,serif;
   --font-body:'Inter',sans-serif;
 }
 html{scroll-behavior:smooth}

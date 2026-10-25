@@ -16,7 +16,7 @@
 .sidebar-search{padding:10px;border-bottom:1px solid var(--border)}
 .search-input{width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 12px;font-size:13px;color:var(--text);outline:none;transition:border-color 0.15s}
 .search-input::placeholder{color:var(--text-3)}
-.search-input:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(70,66,207,0.08)}
+.search-input:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(158,61,46,0.08)}
 .sidebar-chats{flex:1;overflow-y:auto;padding:6px}
 .chat-section-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);padding:8px 10px 4px}
 .chat-item{padding:10px 12px;border-radius:var(--r-sm);cursor:pointer;transition:background 0.12s}
@@ -45,7 +45,7 @@
 .chat-header-actions{margin-left:auto;display:flex;gap:6px;align-items:center}
 .hdr-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:var(--r-full);font-size:12px;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-2);transition:all 0.12s;font-weight:500}
 .hdr-btn:hover{border-color:var(--border-strong);color:var(--text)}
-.memory-badge{background:var(--teal-pale);border-color:rgba(26,122,95,0.2);color:var(--teal)}
+.memory-badge{background:var(--teal-pale);border-color:rgba(115,44,33,0.2);color:var(--teal)}
 
 /* Messages */
 .messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px}
@@ -67,7 +67,7 @@
 .msg-row.user-msg .msg-meta{justify-content:flex-end}
 .msg-actions{display:none;gap:4px;align-items:center}
 .msg-content:hover .msg-actions{display:flex}
-.memory-tag{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:3px 8px;border-radius:var(--r-full);font-size:11px;background:var(--teal-pale);color:var(--teal);border:1px solid rgba(26,122,95,0.15)}
+.memory-tag{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:3px 8px;border-radius:var(--r-full);font-size:11px;background:var(--teal-pale);color:var(--teal);border:1px solid rgba(115,44,33,0.15)}
 
 /* Typing indicator */
 .typing-indicator{display:flex;align-items:center;gap:12px;padding:0 24px}
@@ -89,7 +89,7 @@
 .tool-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--r-full);font-size:12px;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);transition:all 0.12s;font-weight:500}
 .tool-btn:hover{border-color:var(--border-strong);color:var(--text)}
 .input-box{display:flex;align-items:flex-end;gap:10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r-xl);padding:11px 11px 11px 18px;transition:border-color 0.15s,box-shadow 0.15s}
-.input-box:focus-within{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(70,66,207,0.08)}
+.input-box:focus-within{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(158,61,46,0.08)}
 #chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14px;resize:none;max-height:120px;line-height:1.6}
 #chat-input::placeholder{color:var(--text-3)}
 .send-btn{width:34px;height:34px;border-radius:50%;background:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:background 0.15s;color:white}
@@ -104,7 +104,7 @@
 .panel-section{padding:16px;border-bottom:1px solid var(--border)}
 .panel-section-title{font-size:11px;font-weight:700;color:var(--text-3);margin-bottom:12px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:1px}
 .active-memories{display:flex;flex-direction:column;gap:6px}
-.mem-pill{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--teal-pale);border:1px solid rgba(26,122,95,0.15);border-radius:var(--r-sm);font-size:12px;color:var(--teal)}
+.mem-pill{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--teal-pale);border:1px solid rgba(115,44,33,0.15);border-radius:var(--r-sm);font-size:12px;color:var(--teal)}
 .mem-pill .mp-del{margin-left:auto;opacity:0.5;font-size:14px;cursor:pointer;transition:opacity 0.15s}
 .mem-pill .mp-del:hover{opacity:1}
 .ai-tools-list{display:flex;flex-direction:column;gap:4px}

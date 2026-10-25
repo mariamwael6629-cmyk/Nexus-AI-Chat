@@ -27,13 +27,13 @@
 
 /* ─── CHIP ─── */
 .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:var(--r-full);font-size:12px;font-weight:500}
-.chip-purple{background:var(--indigo-pale);color:var(--indigo);border:1px solid rgba(70,66,207,0.2)}
-.chip-teal{background:var(--teal-pale);color:var(--teal);border:1px solid rgba(26,122,95,0.2)}
-.chip-magenta{background:#F3EEF9;color:#7C4FA8;border:1px solid rgba(124,79,168,0.2)}
+.chip-purple{background:var(--indigo-pale);color:var(--indigo);border:1px solid rgba(158,61,46,0.2)}
+.chip-teal{background:var(--teal-pale);color:var(--teal);border:1px solid rgba(115,44,33,0.2)}
+.chip-magenta{background:#F5F3F2;color:#8B4B41;border:1px solid rgba(139,75,65,0.2)}
 
 /* ─── PULSE DOT ─── */
 .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);position:relative;display:inline-block}
-.pulse-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:rgba(26,122,95,0.2);animation:pulseAnim 2s infinite}
+.pulse-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:rgba(115,44,33,0.2);animation:pulseAnim 2s infinite}
 @keyframes pulseAnim{0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.5);opacity:0}}
 
 /* ─── ACCENT TEXT (replaces gradient text) ─── */
