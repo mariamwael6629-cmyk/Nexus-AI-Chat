@@ -5,7 +5,7 @@
   .dash-grid{grid-template-columns:1fr}
 }
 .sidebar-toggle-btn{display:none;color:var(--text-2);font-size:18px;padding:4px 8px;border-radius:4px;background:var(--bg-elevated)}
-.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(22,20,18,0.35);z-index:150}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(21,20,19,0.35);z-index:150}
 .sidebar-backdrop.open{display:block}
 @media(max-width:768px){
   .sidebar{width:240px;position:fixed;left:-240px;top:0;z-index:200;transition:left 0.3s}
